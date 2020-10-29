@@ -1,0 +1,12 @@
+---
+- hosts: appserver
+  remote_user: rajarshi
+  tasks:
+  - name: Start basic contos container
+    community.general.docker_container:
+      name: test_
+      image: centos
+      interactive: yes
+  - name: Install python3, pip3
+    
+  

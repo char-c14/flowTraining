@@ -1,0 +1,47 @@
+# For ubuntu on Docker
+
+---
+- hosts: appserver
+  gather_facts: true
+  remote_user: pyapp
+  tasks:
+  - name: Ensure dependencies installed
+    become: yes
+    apt:
+      name:
+        - make 
+        - build-essential 
+        - libssl-dev 
+        - zlib1g-dev
+        - libbz2-dev 
+        - libreadline-dev 
+        - libsqlite3-dev 
+        - wget 
+        - curl 
+        - llvm 
+        - libncurses5-dev
+        - libncursesw5-dev 
+        - xz-utils 
+        - tk-dev
+        - libffi-dev 
+        - liblzma-dev 
+        - python-openssl
+      state: latest
+
+  - name: Curl bash script
+    get_url:
+      url: https://raw.githubusercontent.com/SumantBagri/training/main/pyenv-installer.sh
+      dest: $HOME/pyenv-installer.sh
+      mode: 0755
+
+  - name: Install pyenv
+    shell: $HOME/pyenv-installer.sh
+  
+  - name: Delete installer
+    shell: rm $HOME/pyenv-installer.sh
+
+  #   Optional
+  # - name: Reload shell
+  #   shell: env ENV=$HOME/.profile /bin/sh
+
+

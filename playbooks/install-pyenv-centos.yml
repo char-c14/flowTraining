@@ -1,0 +1,30 @@
+---
+- hosts: appserver
+  remote_user: rajarshi
+  tasks:
+  - name: Ensure dependencies installed
+    yum:
+      use_backend: dnf
+      name:
+        - zlib-devel 
+        - bzip2 
+        - bzip2-devel 
+        - readline-devel 
+        - sqlite
+        - sqlite-devel 
+        - openssl-devel 
+        - xz 
+        - xz-devel
+        - libffi-devel
+      state: latest
+  - name: Curl bash script for install
+    get_url:
+      url: https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer
+      dest: /tmp/pyenv-installer.sh
+      mode: 0755
+  - name: Execute script
+    shell: /tmp/pyenv-installer.sh
+  - name: Clear downloaded script
+    file:
+      path: /tmp/pyenv-installer.sh
+      state: absent

@@ -1,0 +1,10 @@
+---
+- hosts: appserver
+  remote_user: rajarshi
+  tasks:
+  - name: Start basic container
+    community.general.docker_container:
+      name: test_
+      image: rastasheep/ubuntu-sshd
+      interactive: yes  
+      ports:
