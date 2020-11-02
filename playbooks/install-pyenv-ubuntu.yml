@@ -1,10 +1,14 @@
 # For ubuntu on Docker
-
 ---
 - hosts: appserver
   gather_facts: true
-  remote_user: pyapp
+  remote_user: rajarshi
   tasks:
+  - name: Update all packages to their latest version
+    become: yes
+    apt:
+      name: '*'
+      state: latest
   - name: Ensure dependencies installed
     become: yes
     apt:
@@ -30,7 +34,7 @@
 
   - name: Curl bash script
     get_url:
-      url: https://raw.githubusercontent.com/SumantBagri/training/main/pyenv-installer.sh
+      url: https://pyenv.run
       dest: $HOME/pyenv-installer.sh
       mode: 0755
 
@@ -38,10 +42,14 @@
     shell: $HOME/pyenv-installer.sh
   
   - name: Delete installer
-    shell: rm $HOME/pyenv-installer.sh
+    file:
+      path: $HOME/pyenv-installer.sh
+      state: absent
 
-  #   Optional
+  - name: Add to path
+    script: ../path_adder.sh
+
+  # # Optional
   # - name: Reload shell
-  #   shell: env ENV=$HOME/.profile /bin/sh
-
+  #   shell: " . {{ home }}/.bash_profile
 
