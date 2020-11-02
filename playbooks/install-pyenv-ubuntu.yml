@@ -2,7 +2,7 @@
 ---
 - hosts: appserver
   gather_facts: true
-  remote_user: rajarshi
+  remote_user: pyapp
   tasks:
   - name: Update all packages to their latest version
     become: yes
@@ -32,9 +32,9 @@
         - python-openssl
       state: latest
 
-  - name: Curl bash script
-    get_url:
-      url: https://pyenv.run
+  - name: Copy installer from Subtree 
+    copy:
+      src: ../bin/pyenv-installer/bin/pyenv-installer
       dest: $HOME/pyenv-installer.sh
       mode: 0755
 
