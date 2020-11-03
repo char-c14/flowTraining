@@ -4,7 +4,7 @@
   gather_facts: true
   remote_user: rajarshi
   tasks:
-  - name: Update all packages to their latest version
+  - name: Upgrade all packages to their latest version
     become: yes
     apt:
       name: '*'
@@ -21,12 +21,10 @@
         - libreadline-dev 
         - libsqlite3-dev 
         - wget 
-        - curl 
-        - llvm 
+        - curl
         - libncurses5-dev
         - libncursesw5-dev 
-        - xz-utils 
-        - tk-dev
+        - xz-utils
         - libffi-dev 
         - liblzma-dev 
         - python-openssl
@@ -49,7 +47,7 @@
   - name: Add to path
     script: ../path_adder.sh
 
-  # # Optional
+  # Optional
   # - name: Reload shell
-  #   shell: " . {{ home }}/.bash_profile
+  #   shell: " . {{ home }}/.bash_profile "
 
