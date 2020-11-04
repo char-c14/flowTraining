@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "weatherScript"
+version = "0.1.1"
+description = ""
+authors = ["char-c14 <saha.rajarshi17@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "3.9.0"
+pip = "20.2.3^"
+requests = "2.24.0"
+urllib3 = "1.25.11"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+weather_get = "weatherscript.weatherScript:run"
