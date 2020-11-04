@@ -1,0 +1,78 @@
+---
+- hosts: appserver
+  gather_facts: true
+  remote_user: pyapp
+  environment: 
+    PATH: '{{ ansible_env.HOME }}/.pyenv/bin/:{{ ansible_env.PATH }}'
+  tasks:
+  - name: Update all packages to their latest version
+    become: yes
+    apt:
+      name: '*'
+      state: latest
+
+  - name: Check versions of pyenv
+    shell: pyenv versions
+    register: pyenv_versions
+
+  - name: Install 3.9.0 if missing # Long Process, Patience Paaji
+    shell: pyenv install 3.9.0
+    when: 'not('  3.9.0')'
+
+  - name: Set global instance of python
+    shell: pyenv global 3.9.0
+
+  - name: Check previous dirs of weather_app
+    stat:
+      path: "{{item}}"
+    register: folders
+    with_items:
+    - 'weather_app'
+    - 'weather_app/data_logs'
+    - 'weather_app/debug_logs'
+
+  - name: Create DIR structure for storing logs
+    file:
+      path: "{{ item.item }}"
+      state: directory
+      mode: 0755
+    when: item.stat.exists == False
+    loop: "{{ folders.results }}"
+
+  - name: Create venv using pyenv
+    command: pyenv virtualenv 3.9.0 weatherSetup
+
+  - name: Assign venv to local directory
+    command: pyenv local weatherSetup
+    args:
+      chdir: weather_app/
+
+  # - name: Get all dependecies from github repo
+  #   get_url:
+  #     url: 'https://raw.githubusercontent.com/char-c14/weatherScript/entryPoint/{{ item }}'
+  #     dest: '{{  ansible_env.HOME }}/weather_app/'
+  #   with_items:
+  #     - 'poetry.lock'
+  #     - 'pyproject.toml'
+  #     - 'dist/weatherScript-0.1.0-py3-none-any.whl'
+  #     - 'config.ini'
+
+# To be replaced by subtree in final commit
+
+  - name: Get all dependecies from github repo
+    copy:
+      src: '../bin/weatherScript/'
+      dest: '{{  ansible_env.HOME }}/weather_app/'
+      mode: 0755
+
+  - name: Run commands in Venv created
+    command: '{{ item }}'
+    with_items:
+      - pip install poetry
+      - poetry install
+    #   - pyenv rehash && hash -r
+    args:
+      chdir: weather_app/
+    environment: 
+      PATH: '{{ ansible_env.HOME }}/.pyenv/versions/weatherSetup/bin:{{ ansible_env.PATH }}'
+

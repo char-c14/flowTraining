@@ -1,0 +1,33 @@
+---
+- hosts: appserver
+  gather_facts: true
+  remote_user: pyapp
+  environment: 
+    PATH: '{{ ansible_env.HOME }}/.pyenv/bin/:{{ ansible_env.PATH }}'
+  tasks:
+  - name: Copy cleaning script and config file
+    copy:
+      src: 'weather_app/{{ item }}'
+      dest: '{{ ansible_env.HOME }}/weather_app/'
+      mode: 0755
+    with_items:
+      - 'clean.sh'
+      - 'config.ini'
+  - name: Cron bola Cron bola
+    cron:
+      name: Fetch Data
+      minute: '0'
+      hour: '6-18'
+      job: "export PATH=\"$HOME/.pyenv/bin:$PATH\" \
+            && eval \"$(pyenv init -)\" 
+            && eval \"$(pyenv virtualenv-init -)\" 
+            && pyenv activate weatherSetup \
+            && cd weather_app \
+            && weather_get"
+  
+  - name: Cron nahi bola
+    cron:
+      name: Delete old Data
+      minute: '0'
+      hour: '6-18'
+      job: ./clean.sh

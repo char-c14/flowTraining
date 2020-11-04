@@ -1,7 +1,2 @@
 [appserver]
-10.108.10.33
-[appserver:vars]
-ansible_connnection=ssh
-ansible_port=440
-ansible_password=passkey
-ansible_python_interpreter=/usr/bin/python3
+gcp ansible_port=22 ansible_ssh_private_key_file="~/.ssh/gcp_ssh" ansible_user=pyapp ansible_host=34.68.180.151
