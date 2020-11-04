@@ -61,7 +61,7 @@
 
   - name: Get all dependecies from github repo
     copy:
-      src: '../../weatherScript/'
+      src: '../bin/weatherScript/'
       dest: '{{  ansible_env.HOME }}/weather_app/'
       mode: 0755
 
